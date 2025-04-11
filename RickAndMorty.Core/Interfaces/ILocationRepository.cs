@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace RickAndMorty.Core.Interfaces
 {
-    public interface ICharacterRepository
+    public interface ILocationRepository
     {
-        Task<List<Character>> GetCharacters();
-        Task SaveCharacter(Character character);
-        Task ClearAndSaveCharacters(List<Character> characters);
-
+        Task<Location> GetLocation(string url);
+        Task<Location> SaveLocation(Location origin);
     }
 }

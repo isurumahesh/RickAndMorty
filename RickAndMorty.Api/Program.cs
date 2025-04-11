@@ -1,6 +1,20 @@
+
 using RickAndMorty.Api;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Set up Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration) // Optional: If you use configuration from appsettings.json
+    .WriteTo.Console() // Log to console
+    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day) // Log to file
+    .CreateLogger();
+
+
+builder.Logging.ClearProviders(); 
+builder.Logging.AddSerilog(); 
+
 
 // Add services to the container.
 
@@ -18,6 +32,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 

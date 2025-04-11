@@ -12,5 +12,6 @@ namespace RickAndMorty.Infrastructure.Data
         public DbSet<Character> Characters { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Origin> Origins { get; set; }
+
     }
 }

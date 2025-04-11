@@ -12,7 +12,7 @@ using RickAndMorty.Infrastructure.Data;
 namespace RickAndMorty.Infrastructure.Migrations
 {
     [DbContext(typeof(RickAndMortyDbContext))]
-    [Migration("20250411104731_initial")]
+    [Migration("20250411160949_initial")]
     partial class initial
     {
         /// <inheritdoc />

@@ -1,4 +1,5 @@
-﻿using RickAndMorty.Infrastructure;
+﻿using RickAndMorty.Application;
+using RickAndMorty.Infrastructure;
 
 namespace RickAndMorty.Api
 {
@@ -7,6 +8,7 @@ namespace RickAndMorty.Api
         public static IServiceCollection AddAppDI(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddInfrastructureDI(configuration);
+            services.AddApplicationDI();
             return services;
         }
     }

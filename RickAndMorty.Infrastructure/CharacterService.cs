@@ -17,18 +17,26 @@ namespace RickAndMorty.Infrastructure
         {
             Console.WriteLine("Data fetched");
             var nextPage = "character";
-            var aliveCharactersList=new List<CharacterDTO>();
+            var aliveCharactersList = new List<CharacterDTO>();
 
-            while (nextPage != null)
+            try
             {
-                var response = await _httpClient.GetFromJsonAsync<ApiResponse<CharacterDTO>>(nextPage);
-                var aliveCharacters = response?.Results.Where(a => a.Status == "Alive").ToList();
-                aliveCharactersList.AddRange(aliveCharacters);
+                while (nextPage != null)
+                {
+                    var response = await _httpClient.GetFromJsonAsync<ApiResponse<CharacterDTO>>(nextPage);
+                    var aliveCharacters = response?.Results.Where(a => a.Status == "Alive").ToList();
+                    aliveCharactersList.AddRange(aliveCharacters);
 
-                nextPage = response?.Info.Next;
+                    nextPage = response?.Info.Next;
+                }
+
+                return aliveCharactersList;
             }
-
-            return aliveCharactersList;
+            catch (Exception ex)
+            {
+                Console.WriteLine("Data reading error");
+                return new List<CharacterDTO>();
+            }
         }
     }
 }

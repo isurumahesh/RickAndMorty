@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Polly;
 using RickAndMorty.Core.Entities;
 using RickAndMorty.Core.Interfaces;
 using RickAndMorty.Infrastructure.Data;
@@ -23,8 +24,11 @@ namespace RickAndMorty.Infrastructure.Repositories
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task SaveCharacters(List<Character> characters)
+        public async Task ClearAndSaveCharacters(List<Character> characters)
         {
+           // dbContext.Characters.RemoveRange(dbContext.Characters);
+           // await dbContext.SaveChangesAsync();
+
             await dbContext.Characters.AddRangeAsync(characters);
             await dbContext.SaveChangesAsync();
         }
