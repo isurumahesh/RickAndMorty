@@ -6,6 +6,7 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: "RickAndMortyWebApi"
+  ConnectionStrings__AzureConnectionString: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
 
 jobs:
   build:
@@ -30,6 +31,9 @@ jobs:
 
       - name: Run Integration Tests
         run: dotnet test ./RickAndMorty.IntegrationTests/RickAndMorty.IntegrationTests.csproj --configuration Release
+
+      - name: Run EF Core Migrations
+        run: dotnet ef database update --project ./RickAndMorty.Infrastructure/RickAndMorty.Infrastructure.csproj --startup-project ./RickAndMorty.Api/RickAndMorty.Api.csproj --context RickAndMortyDbContext
 
       - name: Publish
         run: dotnet publish ./RickAndMorty.Api/RickAndMorty.Api.csproj --configuration Release --output ./publish

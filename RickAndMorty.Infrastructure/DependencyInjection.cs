@@ -14,7 +14,12 @@ namespace RickAndMorty.Infrastructure
     {
         public static IServiceCollection AddInfrastructureDI(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("AzureConnectionString");
+
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__AzureConnectionString");
+            }
 
             services.AddDbContext<RickAndMortyDbContext>((provider, options) =>
             {
