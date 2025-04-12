@@ -3,17 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RickAndMorty.Api", "RickAndMorty.Api\RickAndMorty.Api.csproj", "{27F5BA46-30C3-4F06-B4FC-C394CCA53AE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RickAndMorty.Api", "RickAndMorty.Api\RickAndMorty.Api.csproj", "{27F5BA46-30C3-4F06-B4FC-C394CCA53AE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RickAndMorty.UnitTests", "RickAndMorty.UnitTests\RickAndMorty.UnitTests.csproj", "{A5D3223C-9EB4-4782-A00A-7ED107AB3EB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RickAndMorty.UnitTests", "RickAndMorty.UnitTests\RickAndMorty.UnitTests.csproj", "{A5D3223C-9EB4-4782-A00A-7ED107AB3EB7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RickAndMorty.DataProcessor", "RickAndMorty.DataProcessor\RickAndMorty.DataProcessor.csproj", "{CB907CCB-DF55-4E06-9F89-7919C3ACECDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RickAndMorty.DataProcessor", "RickAndMorty.DataProcessor\RickAndMorty.DataProcessor.csproj", "{CB907CCB-DF55-4E06-9F89-7919C3ACECDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RickAndMorty.Application", "RickAndMorty.Application\RickAndMorty.Application.csproj", "{0DB63F47-48DB-4F19-BAA8-D1D2C2997A1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RickAndMorty.Application", "RickAndMorty.Application\RickAndMorty.Application.csproj", "{0DB63F47-48DB-4F19-BAA8-D1D2C2997A1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RickAndMorty.Infrastructure", "RickAndMorty.Infrastructure\RickAndMorty.Infrastructure.csproj", "{AAE45B98-0795-479D-BB22-A701A77EF2F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RickAndMorty.Infrastructure", "RickAndMorty.Infrastructure\RickAndMorty.Infrastructure.csproj", "{AAE45B98-0795-479D-BB22-A701A77EF2F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RickAndMorty.Core", "RickAndMorty.Core\RickAndMorty.Core.csproj", "{0F0374A7-F60E-412B-B104-E662B3C89C79}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RickAndMorty.Core", "RickAndMorty.Core\RickAndMorty.Core.csproj", "{0F0374A7-F60E-412B-B104-E662B3C89C79}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RickAndMorty.UI", "RickAndMorty.UI\RickAndMorty.UI.csproj", "{362D61CF-2754-4B03-85C0-20F3F7727D33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RickAndMorty.IntegrationTests", "RickAndMorty.IntegrationTests\RickAndMorty.IntegrationTests.csproj", "{509194B4-7EC7-45BF-BA7E-E145D70E3329}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{0F0374A7-F60E-412B-B104-E662B3C89C79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F0374A7-F60E-412B-B104-E662B3C89C79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F0374A7-F60E-412B-B104-E662B3C89C79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{362D61CF-2754-4B03-85C0-20F3F7727D33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{362D61CF-2754-4B03-85C0-20F3F7727D33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{362D61CF-2754-4B03-85C0-20F3F7727D33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{362D61CF-2754-4B03-85C0-20F3F7727D33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{509194B4-7EC7-45BF-BA7E-E145D70E3329}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{509194B4-7EC7-45BF-BA7E-E145D70E3329}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{509194B4-7EC7-45BF-BA7E-E145D70E3329}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{509194B4-7EC7-45BF-BA7E-E145D70E3329}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

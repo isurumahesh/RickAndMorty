@@ -2,7 +2,7 @@
 using RickAndMorty.Core.Entities;
 using System.Net.Http.Json;
 
-namespace RickAndMorty.Infrastructure
+namespace RickAndMorty.Infrastructure.Services
 {
     public class CharacterService : ICharacterService
     {

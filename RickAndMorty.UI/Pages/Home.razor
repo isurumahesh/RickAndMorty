@@ -1,0 +1,107 @@
+﻿@page "/"
+@using RickAndMorty.UI.Models
+@inject HttpClient Http
+
+<PageTitle>Home</PageTitle>
+
+<h1>Rick and Morty</h1>
+
+<a class="btn btn-primary mb-3" href="/character">New Character</a>
+
+@if (characters == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="d-flex">
+        <!-- Align pagination to the right -->
+        <nav class="ms-auto">
+            <ul class="pagination">
+                <li class="page-item @(CurrentPage == 1 ? "disabled" : "")">
+                    <button class="page-link" @onclick="GoToPreviousPage">Previous</button>
+                </li>
+                <li class="page-item @(CurrentPage == totalPages ? "disabled" : "")">
+                    <button class="page-link" @onclick="GoToNextPage">Next</button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Species</th>
+                <th>Type</th>
+                <th>Gender</th>
+                <th>Origin</th>
+                <th>Location</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var character in paginatedCharacters)
+            {
+                <tr>
+                    <td>@character.Id</td>
+                    <td>@character.Name</td>
+                    <td>@character.Status</td>
+                    <td>@character.Species</td>
+                    <td>@character.Type</td>
+                    <td>@character.Gender</td>
+                    <td>@character.Origin?.Name</td>
+                    <td>@character.Location?.Name</td>
+                    <td><img src="@character.Image" style="max-width: 60px; border-radius:50%" class="img-fluid" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+  
+}
+
+@code {
+    private List<Character>? characters;
+    private List<Character> paginatedCharacters = new();
+    private int CurrentPage = 1;
+    private int pageSize = 20;
+    private int totalPages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        characters = await Http.GetFromJsonAsync<List<Character>>("https://localhost:44363/api/Characters");   
+        totalPages = (int)Math.Ceiling(characters.Count / (double)pageSize);
+        PaginateCharacters();
+    }
+
+    private void PaginateCharacters()
+    {
+       
+        paginatedCharacters = characters
+            .Skip((CurrentPage - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+    }
+
+    private void GoToPreviousPage()
+    {
+        if (CurrentPage > 1)
+        {
+            CurrentPage--;
+            PaginateCharacters();
+        }
+    }
+
+    private void GoToNextPage()
+    {
+        if (CurrentPage < totalPages)
+        {
+            CurrentPage++;
+            PaginateCharacters();
+        }
+    }
+}

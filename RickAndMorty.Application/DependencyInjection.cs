@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
+using RickAndMorty.Application.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,7 @@ namespace RickAndMorty.Application
             });
 
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+            services.AddValidatorsFromAssemblyContaining<CharacterValidator>();
 
             return services;
         }

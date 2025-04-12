@@ -1,0 +1,116 @@
+﻿@inject HttpClient Http
+@page "/character"
+@using System.ComponentModel.DataAnnotations
+@inject NavigationManager NavigationManager
+
+<h3>Add Character</h3>
+
+<div class="card">
+    <div class="card-body">
+        <EditForm Model="character" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <InputText id="name" class="form-control" @bind-Value="character.Name" />
+            </div>
+
+            <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <InputText id="status" class="form-control" @bind-Value="character.Status" />
+            </div>
+
+            <div class="mb-3">
+                <label for="species" class="form-label">Species</label>
+                <InputText id="species" class="form-control" @bind-Value="character.Species" />
+            </div>
+
+            <div class="mb-3">
+                <label for="type" class="form-label">Type</label>
+                <InputText id="type" class="form-control" @bind-Value="character.Type" />
+            </div>
+
+            <div class="mb-3">
+                <label for="gender" class="form-label">Gender</label>
+                <InputSelect id="gender" class="form-control" @bind-Value="character.Gender">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Genderless">Genderless</option>
+                    <option value="Unknown">Unknown</option>
+                    <option value="Other">Other</option>                
+                </InputSelect>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+        </EditForm>
+        @if (serverErrors.Any())
+        {
+            <div class="alert alert-danger" style="margin-top:10px">
+                <ul>
+                    @foreach (var error in serverErrors)
+                    {
+                        <li>@error</li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private Character character = new();
+    private List<string> serverErrors = new();
+
+    private async Task HandleValidSubmit()
+    {
+
+        var response = await Http.PostAsJsonAsync("https://localhost:44363/api/Characters", character);
+
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/");
+            Console.WriteLine("Character saved successfully.");
+        }
+        else
+        {
+            var errorResponse = await response.Content.ReadFromJsonAsync<ValidationErrorResponse>();
+            if (errorResponse != null && errorResponse.Errors.Any())
+            {
+                serverErrors = errorResponse.Errors.Select(a => a.ErrorMessage).ToList();
+            }
+        }
+    }
+
+
+    private class Character
+    {
+        [Required(ErrorMessage = "Name is required")]
+        public string Name { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Status is required")]
+        public string Status { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Species is required")]
+        public string Species { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Gender is required")]
+        public string Gender { get; set; } = string.Empty;
+    }
+
+    public class ValidationErrorResponse
+    {
+        public bool IsValid { get; set; }
+        public List<ValidationError> Errors { get; set; }
+        public List<string> RuleSetsExecuted { get; set; }
+    }
+
+    public class ValidationError
+    {
+        public string PropertyName { get; set; }
+        public string ErrorMessage { get; set; }
+        public string AttemptedValue { get; set; }
+        public object CustomState { get; set; }
+        public int Severity { get; set; }
+        public string ErrorCode { get; set; }
+    }
+}

@@ -14,6 +14,7 @@ namespace RickAndMorty.Application
                 .ReverseMap()
                 .ForMember(dest => dest.Episode, opt => opt.MapFrom(src => JsonConvert.DeserializeObject<List<string>>(src.EpisodeUrlsJson)));
 
+            CreateMap<CharacterSaveDTO, Character>();
             CreateMap<OriginDTO, Origin>().ReverseMap();
             CreateMap<LocationDTO, Location>().ReverseMap();
         }

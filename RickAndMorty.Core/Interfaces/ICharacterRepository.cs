@@ -11,7 +11,7 @@ namespace RickAndMorty.Core.Interfaces
     {
         Task<List<Character>> GetCharacters();
         Task SaveCharacter(Character character);
-        Task ClearAndSaveCharacters(List<Character> characters);
+        Task SaveCharacters(List<Character> characters);
 
     }
 }

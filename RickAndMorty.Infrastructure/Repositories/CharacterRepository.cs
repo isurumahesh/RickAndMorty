@@ -1,13 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Polly;
 using RickAndMorty.Core.Entities;
 using RickAndMorty.Core.Interfaces;
 using RickAndMorty.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RickAndMorty.Infrastructure.Repositories
 {
@@ -15,20 +9,31 @@ namespace RickAndMorty.Infrastructure.Repositories
     {
         public async Task<List<Character>> GetCharacters()
         {
-            return await dbContext.Characters.Include(a => a.Origin).Include(a => a.Location).ToListAsync();
+            return await dbContext.Characters
+                .Include(a => a.Origin)
+                .Include(a => a.Location)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task SaveCharacter(Character character)
         {
-            await dbContext.Characters.AddAsync(character);
-            await dbContext.SaveChangesAsync();
+            try
+            {
+                var maxId = await dbContext.Characters.MaxAsync(a => a.Id);
+                character.Id = maxId + 1;
+                await dbContext.Characters.AddAsync(character);
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
-        public async Task ClearAndSaveCharacters(List<Character> characters)
-        {
-           // dbContext.Characters.RemoveRange(dbContext.Characters);
-           // await dbContext.SaveChangesAsync();
-
+        public async Task SaveCharacters(List<Character> characters)
+        {      
             await dbContext.Characters.AddRangeAsync(characters);
             await dbContext.SaveChangesAsync();
         }

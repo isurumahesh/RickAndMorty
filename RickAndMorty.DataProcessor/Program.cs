@@ -3,8 +3,15 @@ using Microsoft.Extensions.Hosting;
 using RickAndMorty.Application;
 using RickAndMorty.DataProcessor;
 using RickAndMorty.Infrastructure;
+using RickAndMorty.Infrastructure.Services;
+using Serilog;
 
 var host = Host.CreateDefaultBuilder(args)
+     .UseSerilog((context, services, configuration) => configuration
+        .MinimumLevel.Warning()
+        .WriteTo.Console()  // Log to console
+        .WriteTo.File("logs/console-log-.txt", rollingInterval: RollingInterval.Day) // Log to file
+    )
     .ConfigureServices((context, services) =>
     {
         services.AddTransient<ICharacterService, CharacterService>();

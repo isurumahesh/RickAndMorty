@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using RickAndMorty.Application.Commands;
-using RickAndMorty.Infrastructure;
+using RickAndMorty.Infrastructure.Services;
 
 namespace RickAndMorty.DataProcessor
 {
@@ -20,7 +20,7 @@ namespace RickAndMorty.DataProcessor
 
         public async Task ReadData()
         {
-            _logger.LogInformation("Starting to read data from the API...");
+            _logger.LogWarning("Warning");
 
             Console.WriteLine("Start reading Character data");
             var characters = await characterService.ReadCharacterData();

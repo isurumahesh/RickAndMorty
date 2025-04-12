@@ -1,6 +1,6 @@
 ﻿using RickAndMorty.Application.DTOs;
 
-namespace RickAndMorty.Infrastructure
+namespace RickAndMorty.Infrastructure.Services
 {
     public interface ICharacterService
     {

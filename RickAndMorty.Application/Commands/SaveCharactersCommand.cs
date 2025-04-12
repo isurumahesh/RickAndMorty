@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using RickAndMorty.Application.DTOs;
+using RickAndMorty.Application.Interfaces;
 using RickAndMorty.Core.Entities;
 using RickAndMorty.Core.Interfaces;
 
@@ -8,22 +9,24 @@ namespace RickAndMorty.Application.Commands
 {
     public record SaveCharactersCommand(List<CharacterDTO> Characters) : IRequest;
 
-    public class SaveCharacterCommandHandler
+    public class SaveCharactersCommandHandler
       : IRequestHandler<SaveCharactersCommand>
     {
         private readonly ICharacterRepository characterRepository;
         private readonly ILocationRepository locationRepository;
         private readonly IOriginRepository originRepository;
         private readonly ICleanDatabaseService cleanDatabaseService;
+        private readonly ICacheService cacheService;
         private readonly IMapper mapper;
 
-        public SaveCharacterCommandHandler(ICharacterRepository characterRepository, IOriginRepository originRepository,
-            ILocationRepository locationRepository, ICleanDatabaseService cleanDatabaseService, IMapper mapper)
+        public SaveCharactersCommandHandler(ICharacterRepository characterRepository, IOriginRepository originRepository,
+            ILocationRepository locationRepository, ICleanDatabaseService cleanDatabaseService,ICacheService cacheService, IMapper mapper)
         {
             this.characterRepository = characterRepository;
             this.originRepository = originRepository;
             this.locationRepository = locationRepository;
             this.cleanDatabaseService = cleanDatabaseService;
+            this.cacheService = cacheService;
             this.mapper = mapper;
         }
 
@@ -61,7 +64,8 @@ namespace RickAndMorty.Application.Commands
                     }
                 }
 
-                await characterRepository.ClearAndSaveCharacters(characters);
+                await characterRepository.SaveCharacters(characters);
+                cacheService.Remove("CharacterList");
             }
             catch (Exception ex)
             {

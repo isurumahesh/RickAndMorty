@@ -1,6 +1,12 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using FluentValidation.Results;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RickAndMorty.Application.Commands;
+using RickAndMorty.Application.DTOs;
 using RickAndMorty.Application.Queries;
+using System;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,42 +17,37 @@ namespace RickAndMorty.Api.Controllers
     public class CharactersController : ControllerBase
     {
         private readonly IMediator mediator;
-        public CharactersController(IMediator mediator)
+        private readonly IValidator<CharacterSaveDTO> validator;
+
+        public CharactersController(IMediator mediator, IValidator<CharacterSaveDTO> validator)
         {
             this.mediator = mediator;
+            this.validator = validator;
         }
 
         // GET: api/<CharactersController>
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-           var characters=await mediator.Send(new GetCharactersQuery());
-           return Ok(characters);
-        }
-
-        // GET api/<CharactersController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
+            var (characters, isFromCache) = await mediator.Send(new GetCharactersQuery());
+            Response.Headers.Append("X-From-Database", isFromCache ? "No" : "Yes");
+            return Ok(characters);
         }
 
         // POST api/<CharactersController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] CharacterSaveDTO characterSaveDTO)
         {
-        }
+            ValidationResult result = await validator.ValidateAsync(characterSaveDTO);
 
-        // PUT api/<CharactersController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+            if (!result.IsValid)
+            {
+                result.AddToModelState(this.ModelState);
+                return BadRequest(result);
+            }
 
-        // DELETE api/<CharactersController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            await mediator.Send(new SaveCharacterCommand(characterSaveDTO));
+            return Created();
         }
     }
 }
