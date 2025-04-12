@@ -1,10 +1,12 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using RickAndMorty.Application.Constants;
 using RickAndMorty.Application.DTOs;
 using RickAndMorty.Infrastructure.Data;
 using System.Net.Http.Json;
+using System.Text;
 
 namespace RickAndMorty.IntegrationTests
 {
@@ -28,13 +30,17 @@ namespace RickAndMorty.IntegrationTests
         {
             using (var scope = _factory.Services.CreateScope())
             {
+
                 var scopedSevices = scope.ServiceProvider;
+                var memoryCache = scopedSevices.GetRequiredService<IMemoryCache>();              
+                memoryCache.Remove(CacheConstants.CharacterList);
                 var db = scopedSevices.GetRequiredService<RickAndMortyDbContext>();
 
                 db.Database.EnsureCreated();
                 Seeding.IntializeTestDb(db);
             }
 
+        
             var response = await _httpClient.GetAsync("api/characters");
             var result = await response.Content.ReadFromJsonAsync<List<CharacterDTO>>();
 
@@ -62,6 +68,7 @@ namespace RickAndMorty.IntegrationTests
             {
                 var scopedSevices = scope.ServiceProvider;
                 var memoryCache = scope.ServiceProvider.GetRequiredService<IMemoryCache>();
+                memoryCache.Remove(CacheConstants.CharacterList);
 
                 var expectedCharacters = new List<CharacterDTO>
                     {
@@ -82,6 +89,59 @@ namespace RickAndMorty.IntegrationTests
             var headerValue = response.Headers.GetValues("X-From-Database").FirstOrDefault();
             headerValue.Should().NotBeNull();
             headerValue.Should().Be("No");
+        }
+
+        [Fact]
+        public async Task ShouldReturnBadRequestForInvalidCharacterModel()
+        {
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var scopedSevices = scope.ServiceProvider;
+                var db = scopedSevices.GetRequiredService<RickAndMortyDbContext>();
+
+                db.Database.EnsureCreated();
+                Seeding.IntializeTestDb(db);
+            }
+
+            var characterSaveDto = new CharacterSaveDTO
+            {
+                Name = "Rick",
+            };
+
+            var data = JsonConvert.SerializeObject(characterSaveDto);
+            HttpContent content = new StringContent(data, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync("api/characters", content);
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task ShouldReturnSuccessForValidCharacterModel()
+        {
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var scopedSevices = scope.ServiceProvider;
+                var db = scopedSevices.GetRequiredService<RickAndMortyDbContext>();
+
+                db.Database.EnsureCreated();
+                Seeding.IntializeTestDb(db);
+            }
+
+            var characterSaveDto = new CharacterSaveDTO
+            {
+                Name = "Rick",
+                Gender = "Male",
+                Species = "Human",
+                Status = "Alive",
+            };
+
+            var data = JsonConvert.SerializeObject(characterSaveDto);
+            HttpContent content = new StringContent(data, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync("api/characters", content);
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
     }
 }
