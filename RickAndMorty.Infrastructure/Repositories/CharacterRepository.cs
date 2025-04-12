@@ -27,13 +27,12 @@ namespace RickAndMorty.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-
                 throw;
             }
         }
 
         public async Task SaveCharacters(List<Character> characters)
-        {      
+        {
             await dbContext.Characters.AddRangeAsync(characters);
             await dbContext.SaveChangesAsync();
         }

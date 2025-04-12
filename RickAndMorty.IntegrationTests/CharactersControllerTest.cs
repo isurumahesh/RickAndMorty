@@ -30,9 +30,8 @@ namespace RickAndMorty.IntegrationTests
         {
             using (var scope = _factory.Services.CreateScope())
             {
-
                 var scopedSevices = scope.ServiceProvider;
-                var memoryCache = scopedSevices.GetRequiredService<IMemoryCache>();              
+                var memoryCache = scopedSevices.GetRequiredService<IMemoryCache>();
                 memoryCache.Remove(CacheConstants.CharacterList);
                 var db = scopedSevices.GetRequiredService<RickAndMortyDbContext>();
 
@@ -40,7 +39,6 @@ namespace RickAndMorty.IntegrationTests
                 Seeding.IntializeTestDb(db);
             }
 
-        
             var response = await _httpClient.GetAsync("api/characters");
             var result = await response.Content.ReadFromJsonAsync<List<CharacterDTO>>();
 

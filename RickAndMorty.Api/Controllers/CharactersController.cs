@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using RickAndMorty.Application.Commands;
 using RickAndMorty.Application.DTOs;
 using RickAndMorty.Application.Queries;
-using System;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

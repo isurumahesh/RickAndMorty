@@ -6,6 +6,7 @@ namespace RickAndMorty.Core.Entities
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
+
         public string Name { get; set; }
         public string Status { get; set; }
         public string Species { get; set; }
@@ -20,7 +21,5 @@ namespace RickAndMorty.Core.Entities
         public int? OriginId { get; set; }
         public Location? Location { get; set; }
         public int? LocationId { get; set; }
-
-
     }
 }

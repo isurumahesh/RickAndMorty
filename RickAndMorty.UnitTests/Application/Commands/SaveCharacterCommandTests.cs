@@ -5,14 +5,8 @@ using RickAndMorty.Application.Commands;
 using RickAndMorty.Application.Constants;
 using RickAndMorty.Application.DTOs;
 using RickAndMorty.Application.Interfaces;
-using RickAndMorty.Application.Queries;
 using RickAndMorty.Core.Entities;
 using RickAndMorty.Core.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RickAndMorty.UnitTests.Application.Commands
 {
@@ -50,7 +44,6 @@ namespace RickAndMorty.UnitTests.Application.Commands
 
             mockCacheService.Verify(c => c.Remove(CacheConstants.CharacterList), Times.Once);
             mockCharacterRepository.Verify(r => r.SaveCharacter(It.IsAny<Character>()), Times.Once);
-
         }
     }
 }

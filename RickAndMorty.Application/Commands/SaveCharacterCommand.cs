@@ -5,23 +5,18 @@ using RickAndMorty.Application.DTOs;
 using RickAndMorty.Application.Interfaces;
 using RickAndMorty.Core.Entities;
 using RickAndMorty.Core.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RickAndMorty.Application.Commands
 {
     public record SaveCharacterCommand(CharacterSaveDTO characterDTO) : IRequest;
 
-    public class SaveCharacterCommandHandler: IRequestHandler<SaveCharacterCommand>
+    public class SaveCharacterCommandHandler : IRequestHandler<SaveCharacterCommand>
     {
         private readonly ICharacterRepository characterRepository;
         private readonly ICacheService cacheService;
         private readonly IMapper mapper;
 
-        public SaveCharacterCommandHandler(ICharacterRepository characterRepository,ICacheService caheService, IMapper mapper)
+        public SaveCharacterCommandHandler(ICharacterRepository characterRepository, ICacheService caheService, IMapper mapper)
         {
             this.characterRepository = characterRepository;
             this.cacheService = caheService;

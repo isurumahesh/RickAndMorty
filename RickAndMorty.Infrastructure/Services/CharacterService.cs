@@ -1,5 +1,4 @@
 ﻿using RickAndMorty.Application.DTOs;
-using RickAndMorty.Core.Entities;
 using System.Net.Http.Json;
 
 namespace RickAndMorty.Infrastructure.Services
