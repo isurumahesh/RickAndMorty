@@ -3,37 +3,48 @@ name: Deploy RickAndMorty Api
 on:
   push:
   workflow_dispatch:
-  
+
 env:
-  AZURE_WEBAPP_NAME: "RickAndMortyWebApi"    
-  
+  AZURE_WEBAPP_NAME: "RickAndMortyWebApi"
+
 jobs:
- build:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v3
-    - name: Setup .Net Core
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 8.0.x
+  build:
+    runs-on: ubuntu-latest
 
-    - name: Install dependencies
-      run: dotnet restore ./RickAndMorty.Api/RickAndMorty.Api.csproj
+    steps:
+      - uses: actions/checkout@v3
 
-    - name: Build
-      run: dotnet build ./RickAndMorty.Api/RickAndMorty.Api.csproj --configuration Release --no-restore
+      - name: Setup .Net Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
 
-    - name: Publish
-      run: dotnet publish ./RickAndMorty.Api/RickAndMorty.Api.csproj --configuration Release --output ./publish
+      - name: Install dependencies
+        run: dotnet restore ./RickAndMorty.Api/RickAndMorty.Api.csproj
 
-    # - name: Deloy to Azure
-    #   uses: azure/webapps-deploy@v2
-    #   with:
-    #     app-name: ${{env.AZURE_WEBAPP_NAME}}
-    #     publish-profile: ${{secrets.SAJ_WEBAPP_SECRET}}
-    #     package: ./publish
-      
+      - name: Build
+        run: dotnet build ./RickAndMorty.Api/RickAndMorty.Api.csproj --configuration Release --no-restore
 
-     
+      - name: Run Unit Tests
+        run: dotnet test ./RickAndMorty.Api.Tests/RickAndMorty.Api.Tests.csproj --configuration Release --no-build
 
+      - name: Run Integration Tests
+        run: dotnet test ./RickAndMorty.IntegrationTests/RickAndMorty.IntegrationTests.csproj --configuration Release --no-build
 
+      - name: Publish
+        run: dotnet publish ./RickAndMorty.Api/RickAndMorty.Api.csproj --configuration Release --output ./publish
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy to Azure WebApp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          package: ./publish
+        env:
+          AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}
+          AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
