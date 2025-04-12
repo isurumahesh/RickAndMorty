@@ -29,22 +29,22 @@ jobs:
         run: dotnet test ./RickAndMorty.UnitTests/RickAndMorty.UnitTests.csproj --configuration Release
 
       - name: Run Integration Tests
-        run: dotnet test ./RickAndMorty.IntegrationTests/RickAndMorty.IntegrationTests.csproj --configuration Release --no-build
+        run: dotnet test ./RickAndMorty.IntegrationTests/RickAndMorty.IntegrationTests.csproj --configuration Release
 
       - name: Publish
         run: dotnet publish ./RickAndMorty.Api/RickAndMorty.Api.csproj --configuration Release --output ./publish
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: Deploy to Azure WebApp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-          package: ./publish
-        env:
-          AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}
-          AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+  #     - name: Deploy to Azure WebApp
+  #       uses: azure/webapps-deploy@v2
+  #       with:
+  #         app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+  #         package: ./publish
+  #       env:
+  #         AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}
+  #         AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
