@@ -23,6 +23,9 @@ jobs:
       - name: Install dependencies
         run: dotnet restore ./RickAndMorty.Api/RickAndMorty.Api.csproj
 
+      - name: Install dotnet-ef tool
+        run: dotnet tool install --global dotnet-ef && export PATH="$PATH:/home/runner/.dotnet/tools"
+
       - name: Build
         run: dotnet build ./RickAndMorty.Api/RickAndMorty.Api.csproj --configuration Release --no-restore
 
