@@ -40,7 +40,7 @@ namespace RickAndMorty.Application.Queries
 
                 var mappedCharacters = mapper.Map<List<CharacterDTO>>(characters);
                 var orderedCharacters = mappedCharacters.OrderByDescending(a => a.Id).ToList();
-                cacheService.Set(CacheConstants.CharacterList, orderedCharacters, TimeSpan.FromMinutes(5));
+                cacheService.Set(CacheConstants.CharacterList, orderedCharacters, TimeSpan.FromMinutes(CacheConstants.CacheDuration));
 
                 return new(orderedCharacters, false);
             }
