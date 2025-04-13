@@ -23,7 +23,14 @@ namespace RickAndMorty.Infrastructure
 
             services.AddDbContext<RickAndMortyDbContext>((provider, options) =>
             {
-                options.UseSqlServer(connectionString);
+                options.UseSqlServer(connectionString, sqlServerOptions =>
+                {
+                    sqlServerOptions.EnableRetryOnFailure(
+                        maxRetryCount: 3,
+                        maxRetryDelay: TimeSpan.FromSeconds(5),
+                        errorNumbersToAdd: null
+                    );
+                });
             });
 
             services.AddHttpClient<IApiDataReadService, ApiDataReadService>(option =>
