@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: "RickAndMortyWebApi"
+  AZURE_WEBAPP_NAME: "rickandmortyapi"
   ConnectionStrings__AzureConnectionString: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
 
 jobs:
@@ -41,17 +41,17 @@ jobs:
       - name: Publish
         run: dotnet publish ./RickAndMorty.Api/RickAndMorty.Api.csproj --configuration Release --output ./publish
 
-  # deploy:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - name: Deploy to Azure WebApp
-  #       uses: azure/webapps-deploy@v2
-  #       with:
-  #         app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-  #         package: ./publish
-  #       env:
-  #         AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}
-  #         AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+      - name: Deploy to Azure WebApp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          package: ./publish
+        env:
+          AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}
+          AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.API_PUBLISH_PROFILE }}
