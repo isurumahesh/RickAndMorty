@@ -18,7 +18,7 @@ namespace RickAndMorty.DataProcessor
             this.apiDataReadService = apiDataReadService;
             this.mediator = mediator;
             this.cleanDatabaseService = cleanDatabaseService;
-            logger = logger;
+            this.logger = logger;
         }
 
         public async Task ReadData()
