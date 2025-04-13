@@ -3,7 +3,7 @@ name: Deploy RickAndMorty UI
 on:
   push:
     branches:
-       - main
+      - main
 
 env:
   AZURE_WEBAPP_NAME: "rickandmortyui"
