@@ -17,8 +17,7 @@ namespace RickAndMorty.Infrastructure.Repositories
 
         public async Task<Location> GetLocation(string url)
         {
-            var location = await dbContext.Locations.AsNoTracking().FirstOrDefaultAsync(a => a.Url == url);
-            return location;
+            return await dbContext.Locations.AsNoTracking().FirstOrDefaultAsync(a => a.Url == url);
         }
 
         public async Task<List<Location>> GetLocations()
@@ -29,16 +28,8 @@ namespace RickAndMorty.Infrastructure.Repositories
 
         public async Task SaveLocations(List<Location> locations)
         {
-            try
-            {
-                await dbContext.Locations.AddRangeAsync(locations);
-                await dbContext.SaveChangesAsync();               
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+            await dbContext.Locations.AddRangeAsync(locations);
+            await dbContext.SaveChangesAsync();
         }
     }
 }

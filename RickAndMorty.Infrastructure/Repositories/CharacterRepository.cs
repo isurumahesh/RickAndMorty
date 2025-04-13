@@ -20,7 +20,7 @@ namespace RickAndMorty.Infrastructure.Repositories
         public async Task<List<Character>> GetCharactersByPlanet(string planetName)
         {
             return await dbContext.Characters
-                    .Where(a => a.Origin.Type == CharacterConstants.OriginType && a.Origin.Name.Replace(" ", "").ToLower() == planetName)
+                    .Where(a => a.Origin != null && a.Origin.Type == CharacterConstants.OriginType && a.Origin.Name.Replace(" ", "").ToLower() == planetName)
                     .Include(a => a.Origin)
                     .Include(a => a.Location)
                     .AsNoTracking()

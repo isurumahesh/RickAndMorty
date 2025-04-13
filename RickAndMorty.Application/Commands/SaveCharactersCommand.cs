@@ -6,14 +6,12 @@ using RickAndMorty.Application.DTOs;
 using RickAndMorty.Application.Interfaces;
 using RickAndMorty.Core.Entities;
 using RickAndMorty.Core.Interfaces;
-using System.Linq;
 
 namespace RickAndMorty.Application.Commands
 {
     public record SaveCharactersCommand(List<CharacterDTO> Characters) : IRequest;
 
-    public class SaveCharactersCommandHandler
-      : IRequestHandler<SaveCharactersCommand>
+    public class SaveCharactersCommandHandler : IRequestHandler<SaveCharactersCommand>
     {
         private readonly ICharacterRepository characterRepository;
         private readonly ILocationRepository locationRepository;
@@ -40,10 +38,10 @@ namespace RickAndMorty.Application.Commands
 
                 foreach (var character in characters)
                 {
-                    var existingOrigin = locations.FirstOrDefault(a => a.Url == character.Origin.Url);                 
+                    var existingOrigin = locations.FirstOrDefault(a => a.Url == character?.Origin?.Url);
                     character.OriginId = existingOrigin?.Id;
 
-                    var existingLocation = locations.FirstOrDefault(a => a.Url == character.Location.Url);                
+                    var existingLocation = locations.FirstOrDefault(a => a.Url == character?.Location?.Url);
                     character.LocationId = existingLocation?.Id;
                 }
 
