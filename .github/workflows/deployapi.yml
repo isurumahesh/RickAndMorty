@@ -41,12 +41,6 @@ jobs:
       - name: Publish
         run: dotnet publish ./RickAndMorty.Api/RickAndMorty.Api.csproj --configuration Release --output ./publish
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
       - name: Deploy to Azure WebApp
         uses: azure/webapps-deploy@v2
         with:
