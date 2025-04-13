@@ -14,7 +14,7 @@ namespace RickAndMorty.Infrastructure
     {
         public static IServiceCollection AddInfrastructureDI(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("AzureConnectionString");
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             if (string.IsNullOrEmpty(connectionString))
             {
@@ -26,7 +26,7 @@ namespace RickAndMorty.Infrastructure
                 options.UseSqlServer(connectionString);
             });
 
-            services.AddHttpClient<ICharacterService, CharacterService>(option =>
+            services.AddHttpClient<IApiDataReadService, ApiDataReadService>(option =>
             {
                 option.BaseAddress = new Uri("https://rickandmortyapi.com/api/");
             }).AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(3)))
@@ -36,8 +36,8 @@ namespace RickAndMorty.Infrastructure
             services.AddSingleton<ICacheService, MemoryCacheService>();
             services.AddScoped<ICharacterRepository, CharacterRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
-            services.AddScoped<IOriginRepository, OriginRepository>();
             services.AddScoped<ICleanDatabaseService, CleanDatabaseService>();
+         
 
             return services;
         }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Moq;
 using RickAndMorty.Application;
 using RickAndMorty.Application.Commands;
@@ -14,6 +15,7 @@ namespace RickAndMorty.UnitTests.Application.Commands
     {
         private readonly Mock<ICharacterRepository> mockCharacterRepository;
         private readonly Mock<ICacheService> mockCacheService;
+        private readonly Mock<ILogger<SaveCharacterCommandHandler>> mockLogger;
         private readonly IMapper mapper;
 
         public SaveCharacterCommandTests()
@@ -30,12 +32,13 @@ namespace RickAndMorty.UnitTests.Application.Commands
 
             mockCharacterRepository = new Mock<ICharacterRepository>();
             mockCacheService = new Mock<ICacheService>();
+            mockLogger = new Mock<ILogger<SaveCharacterCommandHandler>>();
         }
 
         [Fact]
         public async Task CharacterShouldBeSavedToDatabase()
         {
-            var characterCommand = new SaveCharacterCommandHandler(mockCharacterRepository.Object, mockCacheService.Object, mapper);
+            var characterCommand = new SaveCharacterCommandHandler(mockCharacterRepository.Object, mockCacheService.Object, mockLogger.Object, mapper);
             var command = new SaveCharacterCommand(new CharacterSaveDTO());
             mockCharacterRepository.Setup(r => r.SaveCharacter(It.IsAny<Character>())).Returns(Task.CompletedTask);
             mockCacheService.Setup(c => c.Remove(CacheConstants.CharacterList)).Verifiable();

@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RickAndMorty.Core", "RickAn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RickAndMorty.UI", "RickAndMorty.UI\RickAndMorty.UI.csproj", "{362D61CF-2754-4B03-85C0-20F3F7727D33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RickAndMorty.IntegrationTests", "RickAndMorty.IntegrationTests\RickAndMorty.IntegrationTests.csproj", "{509194B4-7EC7-45BF-BA7E-E145D70E3329}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RickAndMorty.IntegrationTests", "RickAndMorty.IntegrationTests\RickAndMorty.IntegrationTests.csproj", "{509194B4-7EC7-45BF-BA7E-E145D70E3329}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

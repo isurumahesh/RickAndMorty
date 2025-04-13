@@ -15,10 +15,11 @@ namespace RickAndMorty.Core.Entities
         public string? Image { get; set; }
         public string? EpisodeUrlsJson { get; set; }
         public string? Url { get; set; }
-        public DateTime Created { get; set; }
+        public DateTime Created { get; set; } = DateTime.UtcNow;
 
-        public Origin? Origin { get; set; }
+        public Location? Origin { get; set; }
         public int? OriginId { get; set; }
+
         public Location? Location { get; set; }
         public int? LocationId { get; set; }
     }

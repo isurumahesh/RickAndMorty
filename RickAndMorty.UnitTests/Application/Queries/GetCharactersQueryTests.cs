@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Moq;
 using RickAndMorty.Application;
 using RickAndMorty.Application.DTOs;
@@ -13,6 +14,7 @@ namespace RickAndMorty.UnitTests.Application.Queries
     {
         private readonly Mock<ICharacterRepository> mockCharacterRepository;
         private readonly Mock<ICacheService> mockCacheService;
+        private readonly Mock<ILogger<GetCharactersQueryHandler>> mockLogger;
         private readonly IMapper mapper;
 
         public GetCharactersQueryTests()
@@ -29,12 +31,13 @@ namespace RickAndMorty.UnitTests.Application.Queries
 
             mockCharacterRepository = new Mock<ICharacterRepository>();
             mockCacheService = new Mock<ICacheService>();
+            mockLogger = new Mock<ILogger<GetCharactersQueryHandler>>();
         }
 
         [Fact]
         public async Task CharacterListShouldBeReturnedFromCache()
         {
-            var charactersQuery = new GetCharacterQueryHandler(mockCharacterRepository.Object, mockCacheService.Object, mapper);
+            var charactersQuery = new GetCharactersQueryHandler(mockCharacterRepository.Object, mockCacheService.Object, mockLogger.Object, mapper);
             mockCacheService.Setup(x => x.Get<List<CharacterDTO>>(It.IsAny<string>()))
                 .Returns(GetCharactersDTOList());
 
@@ -47,7 +50,7 @@ namespace RickAndMorty.UnitTests.Application.Queries
         [Fact]
         public async Task CharacterListShouldBeReturnedFromDatabase()
         {
-            var charactersQuery = new GetCharacterQueryHandler(mockCharacterRepository.Object, mockCacheService.Object, mapper);
+            var charactersQuery = new GetCharactersQueryHandler(mockCharacterRepository.Object, mockCacheService.Object, mockLogger.Object, mapper);
             mockCacheService.Setup(x => x.Get<List<CharacterDTO>>(It.IsAny<string>()))
                 .Returns(() => null);
             mockCharacterRepository.Setup(x => x.GetCharacters())

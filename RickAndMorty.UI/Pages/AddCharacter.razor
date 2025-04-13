@@ -1,7 +1,9 @@
 ﻿@inject HttpClient Http
 @page "/character"
 @using System.ComponentModel.DataAnnotations
+@using RickAndMorty.UI.Models
 @inject NavigationManager NavigationManager
+@inject IConfiguration Configuration
 
 <h3>Add Character</h3>
 
@@ -60,13 +62,14 @@
 </div>
 
 @code {
-    private Character character = new();
+    private CharacterSave character = new();
     private List<string> serverErrors = new();
+    private string apiBaseUrl;
 
     private async Task HandleValidSubmit()
     {
-
-        var response = await Http.PostAsJsonAsync("https://localhost:44363/api/Characters", character);
+        apiBaseUrl = Configuration["ApiBaseUrl"];
+        var response = await Http.PostAsJsonAsync($"{apiBaseUrl}/Characters", character);
 
         if (response.IsSuccessStatusCode)
         {
@@ -83,34 +86,4 @@
         }
     }
 
-
-    private class Character
-    {
-        [Required(ErrorMessage = "Name is required")]
-        public string Name { get; set; } = string.Empty;
-        [Required(ErrorMessage = "Status is required")]
-        public string Status { get; set; } = string.Empty;
-        [Required(ErrorMessage = "Species is required")]
-        public string Species { get; set; } = string.Empty;
-        public string Type { get; set; } = string.Empty;
-        [Required(ErrorMessage = "Gender is required")]
-        public string Gender { get; set; } = string.Empty;
-    }
-
-    public class ValidationErrorResponse
-    {
-        public bool IsValid { get; set; }
-        public List<ValidationError> Errors { get; set; }
-        public List<string> RuleSetsExecuted { get; set; }
-    }
-
-    public class ValidationError
-    {
-        public string PropertyName { get; set; }
-        public string ErrorMessage { get; set; }
-        public string AttemptedValue { get; set; }
-        public object CustomState { get; set; }
-        public int Severity { get; set; }
-        public string ErrorCode { get; set; }
-    }
 }

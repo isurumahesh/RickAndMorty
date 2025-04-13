@@ -44,9 +44,9 @@ namespace RickAndMorty.IntegrationTests
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
             result.Should().HaveCount(3);
-            response.Headers.Should().Contain(header => header.Key == "X-From-Database");
+            response.Headers.Should().Contain(header => header.Key == HeaderConstants.XFromDatabase);
 
-            var headerValue = response.Headers.GetValues("X-From-Database").FirstOrDefault();
+            var headerValue = response.Headers.GetValues(HeaderConstants.XFromDatabase).FirstOrDefault();
             headerValue.Should().NotBeNull();
             headerValue.Should().Be("Yes");
         }
@@ -82,9 +82,9 @@ namespace RickAndMorty.IntegrationTests
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
             result.Should().HaveCount(2);
-            response.Headers.Should().Contain(header => header.Key == "X-From-Database");
+            response.Headers.Should().Contain(header => header.Key == HeaderConstants.XFromDatabase);
 
-            var headerValue = response.Headers.GetValues("X-From-Database").FirstOrDefault();
+            var headerValue = response.Headers.GetValues(HeaderConstants.XFromDatabase).FirstOrDefault();
             headerValue.Should().NotBeNull();
             headerValue.Should().Be("No");
         }
@@ -140,6 +140,27 @@ namespace RickAndMorty.IntegrationTests
             var response = await _httpClient.PostAsync("api/characters", content);
 
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task ShouldExcludeXFromDatabaseResponseWhenSpecificQueryParametersAreUsed()
+        {
+            using (var scope = _factory.Services.CreateScope())
+            {
+                var scopedSevices = scope.ServiceProvider;
+                var memoryCache = scopedSevices.GetRequiredService<IMemoryCache>();
+                memoryCache.Remove(CacheConstants.CharacterList);
+                var db = scopedSevices.GetRequiredService<RickAndMortyDbContext>();
+
+                db.Database.EnsureCreated();
+                Seeding.IntializeTestDb(db);
+            }
+
+            var response = await _httpClient.GetAsync("api/characters?planetName='pluto'");
+            var result = await response.Content.ReadFromJsonAsync<List<CharacterDTO>>();
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            response.Headers.Should().NotContain(header => header.Key == HeaderConstants.XFromDatabase);
         }
     }
 }

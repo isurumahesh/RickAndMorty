@@ -8,18 +8,13 @@ using Serilog;
 
 var host = Host.CreateDefaultBuilder(args)
      .UseSerilog((context, services, configuration) => configuration
-        .MinimumLevel.Warning()
+        .MinimumLevel.Information()
         .WriteTo.Console()  // Log to console
         .WriteTo.File("logs/console-log-.txt", rollingInterval: RollingInterval.Day) // Log to file
     )
     .ConfigureServices((context, services) =>
-    {
-        services.AddTransient<ICharacterService, CharacterService>();
-        services.AddSingleton<ApplicationService>();
-        services.AddHttpClient<ICharacterService, CharacterService>(option =>
-        {
-            option.BaseAddress = new Uri("https://rickandmortyapi.com/api/");
-        });
+    {       
+        services.AddSingleton<ApplicationService>();        
         services.AddApplicationDI();
         services.AddInfrastructureDI(context.Configuration);
     })

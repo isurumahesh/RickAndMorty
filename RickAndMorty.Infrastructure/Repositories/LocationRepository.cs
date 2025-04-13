@@ -2,6 +2,7 @@
 using RickAndMorty.Core.Entities;
 using RickAndMorty.Core.Interfaces;
 using RickAndMorty.Infrastructure.Data;
+using System;
 
 namespace RickAndMorty.Infrastructure.Repositories
 {
@@ -16,15 +17,28 @@ namespace RickAndMorty.Infrastructure.Repositories
 
         public async Task<Location> GetLocation(string url)
         {
-            var location = await dbContext.Locations.FirstOrDefaultAsync(a => a.Url == url);
+            var location = await dbContext.Locations.AsNoTracking().FirstOrDefaultAsync(a => a.Url == url);
             return location;
         }
 
-        public async Task<Location> SaveLocation(Location location)
+        public async Task<List<Location>> GetLocations()
         {
-            await dbContext.Locations.AddAsync(location);
-            await dbContext.SaveChangesAsync();
-            return location;
+            var locations = await dbContext.Locations.AsNoTracking().ToListAsync();
+            return locations;
+        }
+
+        public async Task SaveLocations(List<Location> locations)
+        {
+            try
+            {
+                await dbContext.Locations.AddRangeAsync(locations);
+                await dbContext.SaveChangesAsync();               
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 }

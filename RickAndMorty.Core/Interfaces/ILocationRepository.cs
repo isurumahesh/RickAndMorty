@@ -5,7 +5,9 @@ namespace RickAndMorty.Core.Interfaces
     public interface ILocationRepository
     {
         Task<Location> GetLocation(string url);
+        Task<List<Location>> GetLocations();
 
-        Task<Location> SaveLocation(Location origin);
+        Task SaveLocations(List<Location> locations);
+
     }
 }

@@ -35,7 +35,8 @@ namespace RickAndMorty.Infrastructure.Migrations
 
                     b.Property<string>("Gender")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -45,21 +46,25 @@ namespace RickAndMorty.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("OriginId")
                         .HasColumnType("int");
 
                     b.Property<string>("Species")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
@@ -76,53 +81,44 @@ namespace RickAndMorty.Infrastructure.Migrations
             modelBuilder.Entity("RickAndMorty.Core.Entities.Location", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Dimension")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Type");
 
                     b.ToTable("Locations");
-                });
-
-            modelBuilder.Entity("RickAndMorty.Core.Entities.Origin", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Origins");
                 });
 
             modelBuilder.Entity("RickAndMorty.Core.Entities.Character", b =>
                 {
                     b.HasOne("RickAndMorty.Core.Entities.Location", "Location")
-                        .WithMany("Characters")
+                        .WithMany("LocationCharacters")
                         .HasForeignKey("LocationId");
 
-                    b.HasOne("RickAndMorty.Core.Entities.Origin", "Origin")
-                        .WithMany("Characters")
+                    b.HasOne("RickAndMorty.Core.Entities.Location", "Origin")
+                        .WithMany("OriginCharacters")
                         .HasForeignKey("OriginId");
 
                     b.Navigation("Location");
@@ -132,12 +128,9 @@ namespace RickAndMorty.Infrastructure.Migrations
 
             modelBuilder.Entity("RickAndMorty.Core.Entities.Location", b =>
                 {
-                    b.Navigation("Characters");
-                });
+                    b.Navigation("LocationCharacters");
 
-            modelBuilder.Entity("RickAndMorty.Core.Entities.Origin", b =>
-                {
-                    b.Navigation("Characters");
+                    b.Navigation("OriginCharacters");
                 });
 #pragma warning restore 612, 618
         }

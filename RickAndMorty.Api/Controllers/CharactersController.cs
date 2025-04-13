@@ -4,6 +4,7 @@ using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RickAndMorty.Application.Commands;
+using RickAndMorty.Application.Constants;
 using RickAndMorty.Application.DTOs;
 using RickAndMorty.Application.Queries;
 
@@ -26,11 +27,19 @@ namespace RickAndMorty.Api.Controllers
 
         // GET: api/<CharactersController>
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] string? planetName)
         {
-            var (characters, isFromCache) = await mediator.Send(new GetCharactersQuery());
-            Response.Headers.Append("X-From-Database", isFromCache ? "No" : "Yes");
-            return Ok(characters);
+            if (string.IsNullOrWhiteSpace(planetName))
+            {
+                var (characters, isFromCache) = await mediator.Send(new GetCharactersQuery());
+                Response.Headers.Append(HeaderConstants.XFromDatabase, isFromCache ? "No" : "Yes");
+                return Ok(characters);
+            }
+            else
+            {
+                var charactersByPlanet = await mediator.Send(new GetCharactersByPlanetQuery(planetName));
+                return Ok(charactersByPlanet);
+            }
         }
 
         // POST api/<CharactersController>

@@ -1,32 +1,52 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using RickAndMorty.Application.Commands;
+using RickAndMorty.Core.Interfaces;
 using RickAndMorty.Infrastructure.Services;
 
 namespace RickAndMorty.DataProcessor
 {
     public class ApplicationService
     {
-        private readonly ICharacterService characterService;
+        private readonly IApiDataReadService apiDataReadService;
         private readonly IMediator mediator;
-        private readonly ILogger<ApplicationService> _logger;
+        private readonly ICleanDatabaseService cleanDatabaseService;
+        private readonly ILogger<ApplicationService> logger;
 
-        public ApplicationService(ICharacterService characterService, IMediator mediator, ILogger<ApplicationService> logger)
+        public ApplicationService(IApiDataReadService apiDataReadService, IMediator mediator, ICleanDatabaseService cleanDatabaseService, ILogger<ApplicationService> logger)
         {
-            this.characterService = characterService;
+            this.apiDataReadService = apiDataReadService;
             this.mediator = mediator;
-            _logger = logger;
+            this.cleanDatabaseService = cleanDatabaseService;
+            logger = logger;
         }
 
         public async Task ReadData()
         {
-            _logger.LogWarning("Warning");
+            try
+            {
+                Console.WriteLine("Started reading Character data");
 
-            Console.WriteLine("Start reading Character data");
-            var characters = await characterService.ReadCharacterData();
-            await mediator.Send(new SaveCharactersCommand(characters));
+                var characters = await apiDataReadService.ReadCharacterData();
 
-            Console.WriteLine("Character data reading is complted");
+                var originUrlList = characters.Where(c => !String.IsNullOrEmpty(c.Origin.Url)).Select(c => c.Origin.Url).ToList();
+                var locationUrlList = characters.Where(c => !String.IsNullOrEmpty(c.Location.Url)).Select(c => c.Location.Url).ToList();
+
+                var mergedList = originUrlList.Union(locationUrlList).ToList();
+
+                var locationList = await apiDataReadService.ReadLocationData(mergedList);
+
+                await cleanDatabaseService.CleanDatabase();
+
+                await mediator.Send(new SaveLocationsCommand(locationList));
+                await mediator.Send(new SaveCharactersCommand(characters));
+
+                Console.WriteLine("Completed reading Character data");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error reading character data");               
+            }
         }
     }
 }

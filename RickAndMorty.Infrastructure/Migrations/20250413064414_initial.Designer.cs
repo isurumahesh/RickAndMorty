@@ -12,8 +12,8 @@ using RickAndMorty.Infrastructure.Data;
 namespace RickAndMorty.Infrastructure.Migrations
 {
     [DbContext(typeof(RickAndMortyDbContext))]
-    [Migration("20250412061611_making_props_null")]
-    partial class making_props_null
+    [Migration("20250413064414_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,7 +41,6 @@ namespace RickAndMorty.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("LocationId")
@@ -63,11 +62,9 @@ namespace RickAndMorty.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Url")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -82,12 +79,20 @@ namespace RickAndMorty.Infrastructure.Migrations
             modelBuilder.Entity("RickAndMorty.Core.Entities.Location", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Dimension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -100,35 +105,14 @@ namespace RickAndMorty.Infrastructure.Migrations
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("RickAndMorty.Core.Entities.Origin", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Origins");
-                });
-
             modelBuilder.Entity("RickAndMorty.Core.Entities.Character", b =>
                 {
                     b.HasOne("RickAndMorty.Core.Entities.Location", "Location")
-                        .WithMany("Characters")
+                        .WithMany("LocationCharacters")
                         .HasForeignKey("LocationId");
 
-                    b.HasOne("RickAndMorty.Core.Entities.Origin", "Origin")
-                        .WithMany("Characters")
+                    b.HasOne("RickAndMorty.Core.Entities.Location", "Origin")
+                        .WithMany("OriginCharacters")
                         .HasForeignKey("OriginId");
 
                     b.Navigation("Location");
@@ -138,12 +122,9 @@ namespace RickAndMorty.Infrastructure.Migrations
 
             modelBuilder.Entity("RickAndMorty.Core.Entities.Location", b =>
                 {
-                    b.Navigation("Characters");
-                });
+                    b.Navigation("LocationCharacters");
 
-            modelBuilder.Entity("RickAndMorty.Core.Entities.Origin", b =>
-                {
-                    b.Navigation("Characters");
+                    b.Navigation("OriginCharacters");
                 });
 #pragma warning restore 612, 618
         }

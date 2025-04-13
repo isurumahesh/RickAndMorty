@@ -11,23 +11,14 @@ namespace RickAndMorty.IntegrationTests
             context.Database.EnsureCreated();
 
             // Check if data already exists to avoid duplicate seeding
-            if (!context.Characters.Any() && !context.Locations.Any() && !context.Origins.Any())
+            if (!context.Characters.Any() && !context.Locations.Any())
             {
-                // Seed Origins
-                var origins = new List<Origin>
-            {
-                new Origin { Name = "Earth (C-137)",Url="https://rickandmortyapi.com/api/location/2" },
-                new Origin { Name = "Citadel of Ricks",Url="https://rickandmortyapi.com/api/location/2" },
-                new Origin { Name = "Unknown",Url="https://rickandmortyapi.com/api/location/2" }
-            };
-                context.Origins.AddRange(origins);
-
                 // Seed Locations
                 var locations = new List<Location>
             {
-                new Location { Name = "Earth (C-137)",Url = "https://rickandmortyapi.com/api/location/3" },
-                new Location { Name = "Citadel of Ricks",Url = "https://rickandmortyapi.com/api/location/3" },
-                new Location { Name = "Pluto",Url = "https://rickandmortyapi.com/api/location/3" }
+                new Location { Id=1, Name = "Earth (C-137)", Type="Planet", Dimension="Dimension C-137",Url = "https://rickandmortyapi.com/api/location/3" },
+                new Location { Id=2, Name = "Citadel of Ricks",Type="Rocks",Dimension="Dimension C-137", Url = "https://rickandmortyapi.com/api/location/3" },
+                new Location { Id=3, Name = "Pluto", Type="Planet",Dimension="Dimension C-137", Url = "https://rickandmortyapi.com/api/location/3" }
             };
                 context.Locations.AddRange(locations);
 
@@ -42,7 +33,7 @@ namespace RickAndMorty.IntegrationTests
                     Status = "Alive",
                     Species = "Human",
                     Type = "Scientist",
-                    Origin = origins[0],
+                    Origin = locations[0],
                     Location = locations[0],
                     Image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
                 },
@@ -54,8 +45,8 @@ namespace RickAndMorty.IntegrationTests
                     Status = "Alive",
                     Species = "Human",
                     Type = "Sidekick",
-                    Origin = origins[0],
-                    Location = locations[0],
+                    Origin = locations[1],
+                    Location = locations[1],
                     Image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
                 },
                 new Character
@@ -66,8 +57,8 @@ namespace RickAndMorty.IntegrationTests
                     Status = "Unknown",
                     Species = "Human",
                     Type = "Villain",
-                    Origin = origins[1],
-                    Location = locations[1],
+                    Origin = locations[2],
+                    Location = locations[2],
                      Image = "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
                 }
             };

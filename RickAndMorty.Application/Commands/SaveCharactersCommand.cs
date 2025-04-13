@@ -6,6 +6,7 @@ using RickAndMorty.Application.DTOs;
 using RickAndMorty.Application.Interfaces;
 using RickAndMorty.Core.Entities;
 using RickAndMorty.Core.Interfaces;
+using System.Linq;
 
 namespace RickAndMorty.Application.Commands
 {
@@ -16,19 +17,15 @@ namespace RickAndMorty.Application.Commands
     {
         private readonly ICharacterRepository characterRepository;
         private readonly ILocationRepository locationRepository;
-        private readonly IOriginRepository originRepository;
-        private readonly ICleanDatabaseService cleanDatabaseService;
         private readonly ICacheService cacheService;
         private readonly ILogger<SaveCharactersCommandHandler> logger;
         private readonly IMapper mapper;
 
-        public SaveCharactersCommandHandler(ICharacterRepository characterRepository, IOriginRepository originRepository,
-            ILocationRepository locationRepository, ICleanDatabaseService cleanDatabaseService, ICacheService cacheService, ILogger<SaveCharactersCommandHandler> logger, IMapper mapper)
+        public SaveCharactersCommandHandler(ICharacterRepository characterRepository,
+            ILocationRepository locationRepository, ICacheService cacheService, ILogger<SaveCharactersCommandHandler> logger, IMapper mapper)
         {
             this.characterRepository = characterRepository;
-            this.originRepository = originRepository;
             this.locationRepository = locationRepository;
-            this.cleanDatabaseService = cleanDatabaseService;
             this.cacheService = cacheService;
             this.logger = logger;
             this.mapper = mapper;
@@ -38,34 +35,16 @@ namespace RickAndMorty.Application.Commands
         {
             try
             {
-                await cleanDatabaseService.CleanDatabase();
                 var characters = mapper.Map<List<Character>>(request.Characters);
+                var locations = await locationRepository.GetLocations();
 
                 foreach (var character in characters)
                 {
-                    var existingOrigin = await originRepository.GetOrigin(character.Origin.Url);
+                    var existingOrigin = locations.FirstOrDefault(a => a.Url == character.Origin.Url);                 
+                    character.OriginId = existingOrigin?.Id;
 
-                    if (existingOrigin == null)
-                    {
-                        var newOrigin = await originRepository.SaveOrigin(character.Origin);
-                        character.Origin = newOrigin;
-                    }
-                    else
-                    {
-                        character.Origin = existingOrigin;
-                    }
-
-                    var existingLocation = await locationRepository.GetLocation(character.Location.Url);
-
-                    if (existingLocation == null)
-                    {
-                        var location = await locationRepository.SaveLocation(character.Location);
-                        character.Location = location;
-                    }
-                    else
-                    {
-                        character.Location = existingLocation;
-                    }
+                    var existingLocation = locations.FirstOrDefault(a => a.Url == character.Location.Url);                
+                    character.LocationId = existingLocation?.Id;
                 }
 
                 await characterRepository.SaveCharacters(characters);
@@ -73,7 +52,7 @@ namespace RickAndMorty.Application.Commands
             }
             catch (Exception ex)
             {
-                logger.LogError("Characters saving Error", ex);
+                logger.LogError(ex, "Error occurred while saving characters");
                 throw;
             }
         }

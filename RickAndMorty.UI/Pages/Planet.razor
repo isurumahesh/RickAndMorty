@@ -1,0 +1,60 @@
+﻿@page "/character/{planetName}"
+@using RickAndMorty.UI.Models
+
+
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject IConfiguration Configuration
+
+<h3>Character Planet: @planetName</h3>
+@if (characters == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+    <table class="table" style="margin-top:10px">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Species</th>
+                <th>Type</th>
+                <th>Gender</th>              
+                <th>Location</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var character in characters)
+            {
+                <tr>
+                    <td>@character.Id</td>
+                    <td>@character.Name</td>
+                    <td>@character.Status</td>
+                    <td>@character.Species</td>
+                    <td>@character.Type</td>
+                    <td>@character.Gender</td>                    
+                    <td>@character.Location?.Name</td>
+                    <td><img src="@character.Image" style="max-width: 60px; border-radius:50%" class="img-fluid" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+}
+@code {
+    private List<CharacterRead>? characters;
+    [Parameter] public string planetName { get; set; }
+    private string apiBaseUrl;
+
+    protected override async Task OnInitializedAsync()
+    {
+        apiBaseUrl = Configuration["ApiBaseUrl"];
+        var url = $"{apiBaseUrl}/Characters?planetName={planetName}";
+        characters = await Http.GetFromJsonAsync<List<CharacterRead>>($"{apiBaseUrl}/Characters?planetName={planetName}");
+    }
+}

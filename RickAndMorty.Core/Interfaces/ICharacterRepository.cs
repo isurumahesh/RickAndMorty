@@ -6,6 +6,8 @@ namespace RickAndMorty.Core.Interfaces
     {
         Task<List<Character>> GetCharacters();
 
+        Task<List<Character>> GetCharactersByPlanet(string planetName);
+
         Task SaveCharacter(Character character);
 
         Task SaveCharacters(List<Character> characters);
