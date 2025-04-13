@@ -27,7 +27,7 @@ namespace RickAndMorty.Infrastructure
                 {
                     sqlServerOptions.EnableRetryOnFailure(
                         maxRetryCount: 3,
-                        maxRetryDelay: TimeSpan.FromSeconds(5),
+                        maxRetryDelay: TimeSpan.FromSeconds(3),
                         errorNumbersToAdd: null
                     );
                 });

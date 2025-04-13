@@ -2,7 +2,8 @@ name: Deploy RickAndMorty Api
 
 on:
   push:
-  workflow_dispatch:
+    branches:
+       - main
 
 env:
   AZURE_WEBAPP_NAME: "rickandmortyapi"
