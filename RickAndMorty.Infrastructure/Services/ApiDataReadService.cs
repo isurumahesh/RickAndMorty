@@ -24,7 +24,9 @@ namespace RickAndMorty.Infrastructure.Services
                 {
                     var response = await _httpClient.GetFromJsonAsync<ApiResponse<CharacterDTO>>(nextPage);
                     var aliveCharacters = response?.Results.Where(a => a.Status == CharacterConstants.StatusAlive).ToList();
-                    aliveCharactersList.AddRange(aliveCharacters);
+
+                    if (aliveCharacters is not null)
+                        aliveCharactersList.AddRange(aliveCharacters);
 
                     nextPage = response?.Info.Next;
                 }
@@ -46,7 +48,9 @@ namespace RickAndMorty.Infrastructure.Services
                 foreach (var locationUrl in locationUrls)
                 {
                     var response = await _httpClient.GetFromJsonAsync<LocationDTO>(locationUrl);
-                    locationList.Add(response);
+
+                    if (response is not null)
+                        locationList.Add(response);
                 }
 
                 return locationList;
