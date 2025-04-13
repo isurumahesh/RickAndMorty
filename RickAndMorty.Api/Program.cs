@@ -26,7 +26,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin",
         builder =>
         {
-            builder.AllowAnyOrigin()
+            builder.WithOrigins("https://localhost:7210", "https://rickandmortyui-hrgec4gafffbhjby.westeurope-01.azurewebsites.net")
                    .AllowAnyHeader()
                    .AllowAnyMethod();
         });

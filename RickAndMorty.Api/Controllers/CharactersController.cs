@@ -25,8 +25,8 @@ namespace RickAndMorty.Api.Controllers
             this.validator = validator;
         }
 
-        // GET: api/<CharactersController>
         [HttpGet]
+        [ProducesResponseType(typeof(List<CharacterDTO>), StatusCodes.Status201Created)]
         public async Task<IActionResult> Get([FromQuery] string? planetName)
         {
             if (string.IsNullOrWhiteSpace(planetName))
@@ -42,8 +42,9 @@ namespace RickAndMorty.Api.Controllers
             }
         }
 
-        // POST api/<CharactersController>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] CharacterSaveDTO characterSaveDTO)
         {
             ValidationResult result = await validator.ValidateAsync(characterSaveDTO);
