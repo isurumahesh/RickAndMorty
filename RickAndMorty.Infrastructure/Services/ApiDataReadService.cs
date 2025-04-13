@@ -14,7 +14,7 @@ namespace RickAndMorty.Infrastructure.Services
         }
 
         public async Task<List<CharacterDTO>> ReadCharacterData()
-        {           
+        {
             var nextPage = "character";
             var aliveCharactersList = new List<CharacterDTO>();
 

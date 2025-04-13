@@ -18,10 +18,10 @@ namespace RickAndMorty.Infrastructure.Services
 
             try
             {
-                var characters = dbContext.Characters.ToList();                
+                var characters = dbContext.Characters.ToList();
                 var locations = dbContext.Locations.ToList();
 
-                dbContext.Characters.RemoveRange(characters);              
+                dbContext.Characters.RemoveRange(characters);
                 dbContext.Locations.RemoveRange(locations);
 
                 await dbContext.SaveChangesAsync();

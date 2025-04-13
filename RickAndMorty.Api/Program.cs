@@ -34,7 +34,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// This is disabled only for demoing purpose.
+// This is disabled only for demonstration purposes.
 //if (app.Environment.IsDevelopment())
 //{
 //    app.UseSwagger();

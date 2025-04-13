@@ -37,7 +37,6 @@ namespace RickAndMorty.Infrastructure
             services.AddScoped<ICharacterRepository, CharacterRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<ICleanDatabaseService, CleanDatabaseService>();
-         
 
             return services;
         }

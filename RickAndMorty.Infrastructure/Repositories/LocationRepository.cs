@@ -2,7 +2,6 @@
 using RickAndMorty.Core.Entities;
 using RickAndMorty.Core.Interfaces;
 using RickAndMorty.Infrastructure.Data;
-using System;
 
 namespace RickAndMorty.Infrastructure.Repositories
 {

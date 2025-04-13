@@ -7,13 +7,13 @@ using RickAndMorty.Core.Interfaces;
 
 public record SaveLocationsCommand(List<LocationDTO> LocationList) : IRequest;
 
-public class SaveLocationCommandHandler: IRequestHandler<SaveLocationsCommand>
+public class SaveLocationCommandHandler : IRequestHandler<SaveLocationsCommand>
 {
     private readonly ILocationRepository locationRepository;
     private readonly ILogger<SaveLocationCommandHandler> logger;
     private readonly IMapper mapper;
 
-    public SaveLocationCommandHandler(ILocationRepository locationRepository,ILogger<SaveLocationCommandHandler> logger, IMapper mapper)
+    public SaveLocationCommandHandler(ILocationRepository locationRepository, ILogger<SaveLocationCommandHandler> logger, IMapper mapper)
     {
         this.locationRepository = locationRepository;
         this.logger = logger;
