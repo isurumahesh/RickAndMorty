@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure.Identity;
+using Azure.Messaging.ServiceBus;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -44,6 +47,14 @@ namespace RickAndMorty.Infrastructure
             services.AddScoped<ICharacterRepository, CharacterRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<ICleanDatabaseService, CleanDatabaseService>();
+            services.AddScoped<ICharacterService, CharacterService>();
+            services.AddAzureClients(builder =>
+            {               
+                builder.AddClient<ServiceBusClient, ServiceBusClientOptions>((_,_,_) =>
+                {
+                    return new ServiceBusClient("characters.servicebus.windows.net", new DefaultAzureCredential());
+                });
+            });
 
             return services;
         }

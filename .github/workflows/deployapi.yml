@@ -3,7 +3,7 @@ name: Deploy RickAndMorty Api
 on:
   push:
     branches:
-      - docker
+      - midentity
 
 env:
   AZURE_WEBAPP_NAME: "rickandmorty"

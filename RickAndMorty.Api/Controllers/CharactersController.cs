@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using RickAndMorty.Application.Commands;
 using RickAndMorty.Application.Constants;
 using RickAndMorty.Application.DTOs;
+using RickAndMorty.Application.Interfaces;
 using RickAndMorty.Application.Queries;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -18,17 +19,19 @@ namespace RickAndMorty.Api.Controllers
     {
         private readonly IMediator mediator;
         private readonly IValidator<CharacterSaveDTO> validator;
+        private readonly ICharacterService characterService;
 
-        public CharactersController(IMediator mediator, IValidator<CharacterSaveDTO> validator)
+        public CharactersController(IMediator mediator, IValidator<CharacterSaveDTO> validator, ICharacterService characterService)
         {
             this.mediator = mediator;
             this.validator = validator;
+            this.characterService = characterService;
         }
 
         /// <summary>
         /// Retreive all characters
         /// </summary>
-        [HttpGet]        
+        [HttpGet]
         [ProducesResponseType(typeof(List<CharacterDTO>), StatusCodes.Status201Created)]
         public async Task<IActionResult> Get([FromQuery] string? planetName)
         {
@@ -36,6 +39,11 @@ namespace RickAndMorty.Api.Controllers
             {
                 var (characters, isFromCache) = await mediator.Send(new GetCharactersQuery());
                 Response.Headers.Append(HeaderConstants.XFromDatabase, isFromCache ? "No" : "Yes");
+
+                foreach (var item in characters.Take(5))
+                {
+                    await characterService.AddCharacterData(item);
+                }
                 return Ok(characters);
             }
             else
