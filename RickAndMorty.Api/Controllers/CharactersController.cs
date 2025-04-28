@@ -26,7 +26,7 @@ namespace RickAndMorty.Api.Controllers
         }
 
         /// <summary>
-        /// Retrive all characters
+        /// Retreive all characters
         /// </summary>
         [HttpGet]        
         [ProducesResponseType(typeof(List<CharacterDTO>), StatusCodes.Status201Created)]
@@ -45,6 +45,9 @@ namespace RickAndMorty.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Save character
+        /// </summary>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

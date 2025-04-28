@@ -6,7 +6,7 @@ on:
       - docker
 
 env:
-  AZURE_WEBAPP_NAME: "rickandmortyapi"
+  AZURE_WEBAPP_NAME: "rickandmorty"
   ConnectionStrings__AzureConnectionString: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
 
 jobs:
@@ -50,5 +50,12 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ secrets.ACR_LOGIN_SERVER }}/rickandmortyapi:${{ github.sha }}
+          tags: ${{ secrets.ACR_LOGIN_SERVER }}/rickandmortyapi:latest
           file: ./Dockerfile
+
+      - name: Deploy to Azure WebApp
+        uses: azure/webapps-deploy@v2
+        with:
+         images: ${{ secrets.ACR_LOGIN_SERVER }}/rickandmortyapi:latest
+         app-name: ${{env.AZURE_WEBAPP_NAME}}
+         publish-profile: ${{secrets.RM_PUBLISH_SECRET}}        
