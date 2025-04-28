@@ -10,6 +10,9 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["RickAndMorty.Api/RickAndMorty.Api.csproj", "RickAndMorty.Api/"]
+COPY ["RickAndMorty.Application/RickAndMorty.Application.csproj", "RickAndMorty.Application/"]
+COPY ["RickAndMorty.Core/RickAndMorty.Core.csproj", "RickAndMorty.Core/"]
+COPY ["RickAndMorty.Infrastructure/RickAndMorty.Infrastructure.csproj", "RickAndMorty.Infrastructure/"]
 RUN dotnet restore "./RickAndMorty.Api/RickAndMorty.Api.csproj"
 COPY . .
 WORKDIR "/src/RickAndMorty.Api"

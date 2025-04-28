@@ -11,19 +11,21 @@ namespace RickAndMorty.IntegrationTests
     public class CustomWebApplicationFactory<TProgram>
       : WebApplicationFactory<TProgram> where TProgram : class
     {
+
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            SQLitePCL.Batteries.Init();  // Initialize SQLite provider
+
             builder.ConfigureServices(services =>
             {
                 var dbContextDescriptor = services.SingleOrDefault(
-                    d => d.ServiceType ==
-                        typeof(DbContextOptions<RickAndMortyDbContext>));
+                    d => d.ServiceType == typeof(DbContextOptions<RickAndMortyDbContext>));
 
                 services.Remove(dbContextDescriptor);
 
                 var dbConnectionDescriptor = services.SingleOrDefault(
-                    d => d.ServiceType ==
-                        typeof(DbConnection));
+                    d => d.ServiceType == typeof(DbConnection));
 
                 services.Remove(dbConnectionDescriptor);
 
@@ -45,5 +47,6 @@ namespace RickAndMorty.IntegrationTests
 
             builder.UseEnvironment("Development");
         }
+
     }
 }

@@ -25,7 +25,10 @@ namespace RickAndMorty.Api.Controllers
             this.validator = validator;
         }
 
-        [HttpGet]
+        /// <summary>
+        /// Retrive all characters
+        /// </summary>
+        [HttpGet]        
         [ProducesResponseType(typeof(List<CharacterDTO>), StatusCodes.Status201Created)]
         public async Task<IActionResult> Get([FromQuery] string? planetName)
         {

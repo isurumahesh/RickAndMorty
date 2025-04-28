@@ -1,5 +1,6 @@
 using RickAndMorty.Api;
 using Serilog;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,11 @@ builder.Logging.AddSerilog();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory,
+    $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
+});
 builder.Services.AddAppDI(builder.Configuration);
 
 builder.Services.AddCors(options =>
@@ -26,7 +31,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin",
         builder =>
         {
-            builder.WithOrigins("https://localhost:7210", "https://rickandmortyui-hrgec4gafffbhjby.westeurope-01.azurewebsites.net")
+            builder.WithOrigins("https://localhost:7210", "https://dustin-ui-brdhf4arh5bwf8c0.westeurope-01.azurewebsites.net")
                    .AllowAnyHeader()
                    .AllowAnyMethod();
         });
