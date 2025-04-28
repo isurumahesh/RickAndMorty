@@ -36,8 +36,6 @@ jobs:
       - name: Run Integration Tests
         run: dotnet test ./RickAndMorty.IntegrationTests/RickAndMorty.IntegrationTests.csproj --configuration Release
 
-      - name: "Checkout repository"
-        uses: actions/checkout@v4
       - name: "Azure login"
         uses: azure/docker-login@v1
         with:
